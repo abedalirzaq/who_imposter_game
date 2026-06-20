@@ -1,0 +1,56 @@
+final List<Map<String, String>> furnitureWords = [
+
+  // 🪑 أثاث أساسي
+  {'word': 'كرسي', 'category': 'أثاث'},
+  {'word': 'طاولة', 'category': 'أثاث'},
+  {'word': 'سرير', 'category': 'أثاث'},
+  {'word': 'خزانة', 'category': 'أثاث'},
+  {'word': 'تلفاز', 'category': 'أثاث'},
+  {'word': 'مكتب', 'category': 'أثاث'},
+  {'word': 'سجادة', 'category': 'أثاث'},
+  {'word': 'ستارة', 'category': 'أثاث'},
+  {'word': 'مصباح', 'category': 'أثاث'},
+  {'word': 'مرآة', 'category': 'أثاث'},
+  {'word': 'ساعة حائط', 'category': 'أثاث'},
+
+  // 🚽 أشياء يومية (ومنها المضحك 😄)
+  {'word': 'شطافة', 'category': 'أثاث'},
+  {'word': 'مرحاض', 'category': 'أثاث'},
+  {'word': 'مغسلة', 'category': 'أثاث'},
+  {'word': 'دش', 'category': 'أثاث'},
+  {'word': 'فرشاة أسنان', 'category': 'أثاث'},
+  {'word': 'منشفة', 'category': 'أثاث'},
+  {'word': 'سلة مهملات', 'category': 'أثاث'},
+  {'word': 'ممسحة', 'category': 'أثاث'},
+  {'word': 'مكنسة', 'category': 'أثاث'},
+  {'word': 'مكنسة كهربائية', 'category': 'أثاث'},
+  {'word': 'ليفة', 'category': 'أثاث'},
+  {'word': 'صابون', 'category': 'أثاث'},
+  {'word': 'شامبو', 'category': 'أثاث'},
+
+  // 🍳 أدوات مطبخ
+  {'word': 'ثلاجة', 'category': 'أثاث'},
+  {'word': 'فرن', 'category': 'أثاث'},
+  {'word': 'غاز', 'category': 'أثاث'},
+  {'word': 'ميكروويف', 'category': 'أثاث'},
+  {'word': 'خلاط', 'category': 'أثاث'},
+  {'word': 'غلاية', 'category': 'أثاث'},
+  {'word': 'قدر', 'category': 'أثاث'},
+  {'word': 'مقلاة', 'category': 'أثاث'},
+  {'word': 'سكين', 'category': 'أثاث'},
+  {'word': 'شوكة', 'category': 'أثاث'},
+  {'word': 'ملعقة', 'category': 'أثاث'},
+  {'word': 'صحن', 'category': 'أثاث'},
+
+  // 🧺 أشياء إضافية للعبة
+  {'word': 'غسالة', 'category': 'أثاث'},
+  {'word': 'مكواة', 'category': 'أثاث'},
+  {'word': 'مروحة', 'category': 'أثاث'},
+  {'word': 'مكيف', 'category': 'أثاث'},
+  {'word': 'ريموت', 'category': 'أثاث'},
+  {'word': 'شاحن', 'category': 'أثاث'},
+  {'word': 'بطارية', 'category': 'أثاث'},
+  {'word': 'مفاتيح', 'category': 'أثاث'},
+  {'word': 'نظارة', 'category': 'أثاث'},
+  {'word': 'وسادة', 'category': 'أثاث'},
+];
