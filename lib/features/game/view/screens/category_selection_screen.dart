@@ -36,7 +36,7 @@ class CategorySelectionScreen extends StatelessWidget {
                     child:
                         Container(
                           padding: const EdgeInsets.all(8),
-                          child: Icon(
+                          child: FaIcon(
                             FontAwesomeIcons.arrowLeftLong,
                             color: Colors.black,
                           ),
@@ -97,7 +97,7 @@ class CategorySelectionScreen extends StatelessWidget {
                     },
                     child: Container(
                       padding: const EdgeInsets.all(8),
-                      child: Icon(FontAwesomeIcons.gear, color: Colors.black),
+                      child: FaIcon(FontAwesomeIcons.gear, color: Colors.black),
                       decoration: BoxDecoration(
                         color: Colors.yellowAccent,
                         shape: BoxShape.circle,

@@ -214,7 +214,7 @@ class PlayersSetupScreen extends StatelessWidget {
                                     ),
                                     onPressed: () => _addPlayer(controller),
                                     backgroundColor: Colors.yellow,
-                                    child: const Icon(
+                                    child: const FaIcon(
                                       FontAwesomeIcons.plus,
                                       color: Colors.black,
                                     ),

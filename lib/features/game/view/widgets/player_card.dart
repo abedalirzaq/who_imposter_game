@@ -62,14 +62,14 @@ class PlayerCard extends StatelessWidget {
             if (onEdit != null)
             InkWell(
               onTap: onEdit,
-              child: Icon(FontAwesomeIcons.penToSquare, color: Colors.amber),
+              child: FaIcon(FontAwesomeIcons.penToSquare, color: Colors.amber),
             ),
                         SizedBox(width: 15),
 
               if (onRemove != null)
                InkWell(
                 onTap: onRemove,
-                child: Icon(FontAwesomeIcons.trashCan, color: Colors.redAccent)),
+                child: FaIcon(FontAwesomeIcons.trashCan, color: Colors.redAccent)),
                             SizedBox(width: 10),
 
             ]
