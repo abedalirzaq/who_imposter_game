@@ -260,7 +260,7 @@ class CategorySelectionScreen extends StatelessWidget {
                           child: Center(
                             child: BannerAdWidget(
                               slotId: 'category_selection_middle',
-                              adSize: AdSize.banner,
+                              adSize: AdSize.mediumRectangle,
                             ),
                           ),
                         ),

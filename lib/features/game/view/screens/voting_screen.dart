@@ -273,7 +273,7 @@ class _VoterTile extends StatelessWidget {
                       ),
                     ),
                     if (hasVoted)
-                      const Icon(Icons.check_circle, color: Colors.blue)
+                       Icon(Icons.check_circle, color: Get.find<DarkController>().dark.value ? Colors.yellow : Colors.blue )
                     else
                       Icon(Icons.hourglass_empty, color: ThemeService.getSubtextColor(context), size: 20),
                   ],

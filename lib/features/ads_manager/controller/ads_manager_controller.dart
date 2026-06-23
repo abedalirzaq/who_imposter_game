@@ -14,9 +14,13 @@ class AdsManagerController extends GetxController {
   // --- Banner Preload Pool ---
   /// قائمة البانرات الجاهزة للاستخدام (preloaded)
   final List<BannerAd> _preloadedBanners = [];
+  
+  /// قائمة الإعلانات المستطيلة المتوسطة الجاهزة للاستخدام (preloaded medium rectangle)
+  final List<BannerAd> _preloadedMediumRectangles = [];
 
   /// عدد البانرات التي يتم تحميلها مسبقاً بشكل دائم
   static const int _bannerPoolSize = 2;
+  static const int _mediumRectanglePoolSize = 1;
 
   // --- Config Helper ---
   SystemController get _systemController => Get.find<SystemController>();
@@ -164,15 +168,18 @@ class AdsManagerController extends GetxController {
   //  BANNER AD POOL (Preload System)
   // ═══════════════════════════════════════════════════════════════
 
-  /// تعبئة Pool البانرات المحملة مسبقاً
+  /// تعبئة Pool البانرات المحملة مسبقاً للحجمين
   void _fillBannerPool() {
     while (_preloadedBanners.length < _bannerPoolSize) {
-      _preloadSingleBanner();
+      _preloadSingleBanner(adSize: AdSize.banner);
+    }
+    while (_preloadedMediumRectangles.length < _mediumRectanglePoolSize) {
+      _preloadSingleBanner(adSize: AdSize.mediumRectangle);
     }
   }
 
-  /// تحميل بانر واحد وإضافته للـ Pool
-  void _preloadSingleBanner({AdSize adSize = AdSize.banner}) {
+  /// تحميل بانر واحد وإضافته للـ Pool المناسب
+  void _preloadSingleBanner({required AdSize adSize}) {
     final bannerAd = BannerAd(
       adUnitId: AdUnitIds.bannerAdUnitId,
       size: adSize,
@@ -183,30 +190,49 @@ class AdsManagerController extends GetxController {
           // البانر جاهز في الـ Pool
         },
         onAdFailedToLoad: (ad, error) {
-          print('BannerAd preload failed: $error');
-          _preloadedBanners.remove(ad);
+          print('BannerAd ($adSize) preload failed: $error');
+          if (adSize.width == AdSize.mediumRectangle.width &&
+              adSize.height == AdSize.mediumRectangle.height) {
+            _preloadedMediumRectangles.remove(ad);
+          } else {
+            _preloadedBanners.remove(ad);
+          }
           ad.dispose();
         },
       ),
     );
 
-    _preloadedBanners.add(bannerAd);
+    if (adSize.width == AdSize.mediumRectangle.width &&
+        adSize.height == AdSize.mediumRectangle.height) {
+      _preloadedMediumRectangles.add(bannerAd);
+    } else {
+      _preloadedBanners.add(bannerAd);
+    }
     bannerAd.load();
   }
 
-  /// يأخذ بانر جاهز من الـ Pool ويقوم بتحميل واحد جديد بدلاً منه
-  /// يُستخدم من قبل BannerAdWidget
   BannerAd? getPreloadedBanner({AdSize adSize = AdSize.banner}) {
     if (!_systemController.apiConfig.enableBannerAd) return null;
 
-    if (_preloadedBanners.isNotEmpty) {
-      final ad = _preloadedBanners.removeAt(0);
-      // بعد أخذ واحد، نحمّل واحد جديد ليبقى الـ Pool ممتلئ
-      _preloadSingleBanner(adSize: adSize);
-      return ad;
+    if (adSize.width == AdSize.mediumRectangle.width &&
+        adSize.height == AdSize.mediumRectangle.height) {
+      if (_preloadedMediumRectangles.isNotEmpty) {
+        final ad = _preloadedMediumRectangles.removeAt(0);
+        // بعد أخذ واحد، نحمّل واحد جديد بنفس الحجم ليبقى الـ Pool ممتلئ
+        _preloadSingleBanner(adSize: AdSize.mediumRectangle);
+        return ad;
+      }
+    } else {
+      if (_preloadedBanners.isNotEmpty) {
+        final ad = _preloadedBanners.removeAt(0);
+        // بعد أخذ واحد، نحمّل واحد جديد بنفس الحجم ليبقى الـ Pool ممتلئ
+        _preloadSingleBanner(adSize: AdSize.banner);
+        return ad;
+      }
     }
 
-    // لا يوجد بانرات جاهزة، سنعيد null والـ Widget سيحمّل بنفسه
+    // لا يوجد بانرات جاهزة بالحجم المطلوب، سنعيد null والـ Widget سيحمّل بنفسه
+    // ونعيد ملء الـ Pools للمحاولة القادمة
     _fillBannerPool();
     return null;
   }
@@ -219,6 +245,10 @@ class AdsManagerController extends GetxController {
       ad.dispose();
     }
     _preloadedBanners.clear();
+    for (final ad in _preloadedMediumRectangles) {
+      ad.dispose();
+    }
+    _preloadedMediumRectangles.clear();
     super.onClose();
   }
 }

@@ -35,7 +35,7 @@ class PlayersSetupScreen extends StatelessWidget {
       context: context,
       builder: (context) {
         return AlertDialog(
-          backgroundColor: Theme.of(context).colorScheme.surface,
+          backgroundColor: Get.find<DarkController>().dark.value ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.surface,
           title: Text(
             "تعديل الاسم",
             style: TextStyle(color: ThemeService.getTextColor(context)),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:game_imposter/features/dark_mode/dark_controller.dart';
 import 'package:get/get.dart';
 import '../../features/game/controller/game_controller.dart';
 import '../../features/ads_manager/controller/ads_manager_controller.dart';
@@ -81,12 +82,12 @@ class DialogUtils {
 
     return await Get.dialog<bool>(
           AlertDialog(
-            backgroundColor: Theme.of(context).colorScheme.surface,
+            backgroundColor: Get.find<DarkController>().dark.value ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.surface,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
             ),
-            title: const Text(
-              'تحذير ⚠️',
+            title:  Text(
+              'تحذير ',
               style: TextStyle(
                 color: Colors.orangeAccent,
                 fontWeight: FontWeight.bold,
@@ -111,16 +112,16 @@ class DialogUtils {
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey,
+                  backgroundColor: ThemeService.getAccentColor(context),
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
                 onPressed: () => Get.back(result: true),
-                child: const Text(
+                child:  Text(
                   'تخطّي',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: TextStyle(fontWeight: FontWeight.bold,color: ThemeService.getTextColorInsideButton(context)),
                 ),
               ),
             ],
