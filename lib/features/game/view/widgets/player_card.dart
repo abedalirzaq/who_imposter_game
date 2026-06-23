@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:game_imposter/features/dark_mode/dark_controller.dart';
 import 'package:game_imposter/features/dark_mode/theme_service.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 class PlayerCard extends StatelessWidget {
   final String name;
@@ -28,11 +31,11 @@ class PlayerCard extends StatelessWidget {
         margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
         decoration: BoxDecoration(
           color: isSelected
-              ? Theme.of(context).primaryColor.withOpacity(1)
+              ? Get.find<DarkController>().dark.value ? Colors.yellow : Theme.of(context).primaryColor.withOpacity(1)
               : ThemeService.getCardColor(context),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: isSelected ? Theme.of(context).primaryColor : Colors.transparent,
+            color: isSelected ? Get.find<DarkController>().dark.value ? Colors.yellow : Theme.of(context).primaryColor : Colors.transparent,
             width: 2,
           ),
           boxShadow: [

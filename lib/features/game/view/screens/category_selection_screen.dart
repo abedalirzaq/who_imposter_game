@@ -115,6 +115,8 @@ class CategorySelectionScreen extends StatelessWidget {
                       );
                     }
                     final categories = controller.categories;
+                    final firstFour = categories.take(4).toList();
+                    final remaining = categories.skip(4).toList();
 
                     return ListView(
                       children: [
@@ -129,9 +131,9 @@ class CategorySelectionScreen extends StatelessWidget {
                                 mainAxisSpacing: 16,
                                 childAspectRatio: 1.0,
                               ),
-                          itemCount: categories.length,
+                          itemCount: firstFour.length,
                           itemBuilder: (context, index) {
-                            final category = categories[index];
+                            final category = firstFour[index];
                             final isRandom = category == 'عشوائي';
                             final imagePath = _getCategoryImage(category);
 
@@ -253,7 +255,152 @@ class CategorySelectionScreen extends StatelessWidget {
                                 );
                           },
                         ),
-                        SizedBox(height: 20),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                          child: Center(
+                            child: BannerAdWidget(
+                              slotId: 'category_selection_middle',
+                              adSize: AdSize.banner,
+                            ),
+                          ),
+                        ),
+                        if (remaining.isNotEmpty)
+                          GridView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            padding: const EdgeInsets.all(16.0),
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  crossAxisSpacing: 16,
+                                  mainAxisSpacing: 16,
+                                  childAspectRatio: 1.0,
+                                ),
+                            itemCount: remaining.length,
+                            itemBuilder: (context, index) {
+                              final category = remaining[index];
+                              final isRandom = category == 'عشوائي';
+                              final imagePath = _getCategoryImage(category);
+
+                              return GestureDetector(
+                                    onTap: () =>
+                                        controller.selectCategory(category),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(25),
+                                      child: Stack(
+                                        fit: StackFit.expand,
+                                        children: [
+                                          // Background Image
+                                          if (imagePath != null)
+                                            Image.asset(
+                                              imagePath,
+                                              fit: BoxFit.cover,
+                                            )
+                                          else
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                gradient: LinearGradient(
+                                                  colors: isRandom
+                                                      ? [
+                                                          Colors.orangeAccent,
+                                                          Colors.deepOrange,
+                                                        ]
+                                                      : [
+                                                          const Color(0xFF333333),
+                                                          const Color(0xFF555555),
+                                                        ],
+                                                  begin: Alignment.topLeft,
+                                                  end: Alignment.bottomRight,
+                                                ),
+                                              ),
+                                            ),
+
+                                          // Black Overlay
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              gradient: LinearGradient(
+                                                begin: Alignment.topCenter,
+                                                end: Alignment.bottomCenter,
+                                                colors: [
+                                                  Colors.transparent,
+                                                  Colors.black.withOpacity(0.5),
+                                                  Colors.black.withOpacity(1),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+
+                                          // Category Name
+                                          Center(
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Text(
+                                                category,
+                                                style: const TextStyle(
+                                                  fontSize: 22,
+                                                  fontWeight: FontWeight.w900,
+                                                  color: Colors.white,
+                                                  shadows: [
+                                                    Shadow(
+                                                      blurRadius: 10,
+                                                      color: Colors.black,
+                                                      offset: Offset(0, 2),
+                                                    ),
+                                                  ],
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ),
+                                          ),
+
+                                          // Recommended Label
+                                          if (isRandom)
+                                            Positioned(
+                                              top: 10,
+                                              right: 10,
+                                              child: Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                      horizontal: 8,
+                                                      vertical: 4,
+                                                    ),
+                                                decoration: BoxDecoration(
+                                                  color:
+                                                      ThemeService.getAccentColor(
+                                                        context,
+                                                      ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                ),
+                                                child:  Text(
+                                                  'موصى به',
+                                                  style: TextStyle(
+                                                    color: ThemeService.getTextColorInsideButton(context),
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                  .animate()
+                                  .fadeIn(
+                                    duration: 400.ms,
+                                    delay: ((index + 4) * 50).ms,
+                                  )
+                                  .scale(
+                                    begin: const Offset(0.8, 0.8),
+                                    end: const Offset(1, 1),
+                                    duration: 500.ms,
+                                    curve: Curves.easeOutBack,
+                                    delay: ((index + 4) * 50).ms,
+                                  );
+                            },
+                          ),
+                        const SizedBox(height: 20),
                       ],
                     );
                   }),
