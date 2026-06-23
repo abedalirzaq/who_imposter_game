@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:game_imposter/features/dark_mode/dark_controller.dart';
+import 'package:game_imposter/features/dark_mode/theme_service.dart';
 import '../../controller/game_controller.dart';
 import '../../../../core/utils/dialog_utils.dart';
 import '../../model/player_model.dart';
@@ -32,42 +34,41 @@ class _RevealRoleScreenState extends State<RevealRoleScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        width: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFF1c2528), Color.fromARGB(255, 0, 0, 0)],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
-        child: PopScope(
-          canPop: false,
-          onPopInvoked: (didPop) async {
-            if (didPop) return;
-            if (await DialogUtils.showExitDialog()) {
-              Get.back();
-            }
-          },
-          child: SafeArea(
-            child: Obx(() {
-              final player = controller.currentPlayer;
+    return Obx(() {
+      final isDark = Get.find<DarkController>().dark.value;
+      isDark;
+      return Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        body: Container(
+          width: double.infinity,
+          color: Colors.transparent,
+          child: PopScope(
+            canPop: false,
+            onPopInvoked: (didPop) async {
+              if (didPop) return;
+              if (await DialogUtils.showExitDialog()) {
+                Get.back();
+              }
+            },
+            child: SafeArea(
+              child: Obx(() {
+                final player = controller.currentPlayer;
 
-              return AnimatedSwitcher(
-                duration: const Duration(milliseconds: 500),
-                transitionBuilder: (child, animation) {
-                  return FadeTransition(opacity: animation, child: child);
-                },
-                child: _isRevealed
-                    ? _buildRevealedView(player)
-                    : _buildHiddenView(player),
-              );
-            }),
+                return AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 500),
+                  transitionBuilder: (child, animation) {
+                    return FadeTransition(opacity: animation, child: child);
+                  },
+                  child: _isRevealed
+                      ? _buildRevealedView(player)
+                      : _buildHiddenView(player),
+                );
+              }),
+            ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   Widget _buildHiddenView(PlayerModel player) {
@@ -75,11 +76,11 @@ class _RevealRoleScreenState extends State<RevealRoleScreen> {
       key: ValueKey('hidden_${player.id}'),
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Icon(Iconsax.eye_slash, size: 80, color: Colors.white54),
+        Icon(Iconsax.eye_slash, size: 80, color: ThemeService.getSubtextColor(context)),
         const SizedBox(height: 20),
-        const Text(
+        Text(
           "مرر الهاتف إلى",
-          style: TextStyle(fontSize: 24, color: Colors.white70),
+          style: TextStyle(fontSize: 24, color: ThemeService.getSubtextColor(context)),
         ),
         Text(
           player.name,
@@ -90,7 +91,12 @@ class _RevealRoleScreenState extends State<RevealRoleScreen> {
           ),
         ),
         const SizedBox(height: 40),
-        GameButton(text: "انقر للإظهار", onPressed: _onRevealToggle),
+        Center(
+          child: SizedBox(
+            width: 220,
+            child: GameButton(text: "انقر للإظهار", onPressed: _onRevealToggle),
+          ),
+        ),
         const Padding(
           padding: EdgeInsets.all(16.0),
           child: Text(
@@ -109,16 +115,16 @@ class _RevealRoleScreenState extends State<RevealRoleScreen> {
       children: [
         Text(
           "أهلاً ${player.name}",
-          style: const TextStyle(fontSize: 24, color: Colors.white70),
+          style: TextStyle(fontSize: 24, color: ThemeService.getSubtextColor(context)),
         ),
         const SizedBox(height: 20),
         Container(
           padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 40),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.1),
+            color: ThemeService.getCardColor(context),
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color: player.isImposter ? Colors.redAccent : Colors.greenAccent,
+              color: player.isImposter ? Colors.redAccent : ThemeService.getAccentColor(context),
               width: 2,
             ),
           ),
@@ -129,7 +135,7 @@ class _RevealRoleScreenState extends State<RevealRoleScreen> {
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
-                  color: player.isImposter ? Colors.redAccent : Colors.white,
+                  color: player.isImposter ? Colors.redAccent : ThemeService.getAccentColor(context),
                 ),
               ),
               const SizedBox(height: 20),
@@ -141,7 +147,7 @@ class _RevealRoleScreenState extends State<RevealRoleScreen> {
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
                   color: player.isImposter
-                      ? Colors.white70
+                      ? ThemeService.getSubtextColor(context)
                       : Colors.greenAccent,
                 ),
               ),
@@ -149,7 +155,7 @@ class _RevealRoleScreenState extends State<RevealRoleScreen> {
           ),
         ),
         const SizedBox(height: 40),
-        GameButton(text: "أخفِ الإجابة والتالي", onPressed: _onNext),
+        Center(child: SizedBox(width: MediaQuery.of(context).size.width * 0.7, child: GameButton(text: "أخفِ الإجابة والتالي", onPressed: _onNext))),
       ],
     );
   }

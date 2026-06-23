@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:game_imposter/features/dark_mode/dark_controller.dart';
+import 'package:game_imposter/features/dark_mode/theme_service.dart';
 import '../../controller/game_controller.dart';
 import '../../../../core/utils/dialog_utils.dart';
 import '../widgets/next_button.dart';
@@ -28,25 +30,23 @@ class ResultScreen extends StatelessWidget {
       titleMessage = "الامبوستر فاز! 😈";
     }
 
-    return Scaffold(
-      body: PopScope(
-        canPop: false,
-        onPopInvoked: (didPop) async {
-          if (didPop) return;
-          if (await DialogUtils.showExitDialog()) {
-            Get.back();
-          }
-        },
-        child: Container(
-          width: double.infinity,
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xFF1c2528), Color.fromARGB(255, 0, 0, 0)],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
-          ),
-          child: SafeArea(
+    return Obx(() {
+      final isDark = Get.find<DarkController>().dark.value;
+      isDark;
+      return Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        body: PopScope(
+          canPop: false,
+          onPopInvoked: (didPop) async {
+            if (didPop) return;
+            if (await DialogUtils.showExitDialog()) {
+              Get.back();
+            }
+          },
+          child: Container(
+            width: double.infinity,
+            color: Colors.transparent,
+            child: SafeArea(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -55,7 +55,7 @@ class ResultScreen extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
-                    color: skipped ? Colors.grey : Colors.white,
+                    color: skipped ? Colors.grey : ThemeService.getTextColor(context),
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -64,15 +64,15 @@ class ResultScreen extends StatelessWidget {
                   margin: const EdgeInsets.symmetric(horizontal: 20),
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.3),
+                    color: ThemeService.getCardColor(context),
                     borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: Colors.white24),
+                    border: Border.all(color: Theme.of(context).dividerColor.withOpacity(0.1)),
                   ),
                   child: Column(
                     children: [
-                      const Text(
+                      Text(
                         "الامبوستر الحقيقي هو:",
-                        style: TextStyle(fontSize: 24, color: Colors.white70),
+                        style: TextStyle(fontSize: 24, color: ThemeService.getSubtextColor(context)),
                       ),
                       const SizedBox(height: 10),
                       Text(
@@ -84,11 +84,11 @@ class ResultScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 20),
-                      const Divider(color: Colors.white54),
+                      Divider(color: Theme.of(context).dividerColor),
                       const SizedBox(height: 20),
-                      const Text(
+                      Text(
                         "الكلمة كانت:",
-                        style: TextStyle(fontSize: 24, color: Colors.white70),
+                        style: TextStyle(fontSize: 24, color: ThemeService.getSubtextColor(context)),
                       ),
                       const SizedBox(height: 10),
                       Text(
@@ -114,5 +114,6 @@ class ResultScreen extends StatelessWidget {
         ),
       ),
     );
-  }
+  });
+}
 }

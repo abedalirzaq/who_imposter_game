@@ -2,42 +2,46 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../features/game/controller/game_controller.dart';
 import '../../features/ads_manager/controller/ads_manager_controller.dart';
+import '../../features/dark_mode/theme_service.dart';
 
 class DialogUtils {
-  static Future<bool> showExitDialog() async {
+  static Future<bool> showExitDialog({bool showAd = true}) async {
+    final context = Get.context;
+    if (context == null) return false;
+
     return await Get.dialog<bool>(
           AlertDialog(
-            backgroundColor: const Color(0xFF1c2528),
+            backgroundColor: Theme.of(context).colorScheme.primary,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
             ),
-            title: const Text(
+            title: Text(
               'تنبيه',
               style: TextStyle(
-                color: Colors.white,
+                color: ThemeService.getTextColor(context),
                 fontWeight: FontWeight.bold,
               ),
               textAlign: TextAlign.right,
             ),
-            content: const Text(
+            content: Text(
               'هل أنت متأكد من الخروج؟ سيتم فقدان تقدم اللعبة الحالي.',
-              style: TextStyle(color: Colors.white70),
+              style: TextStyle(color: ThemeService.getSubtextColor(context)),
               textAlign: TextAlign.right,
             ),
             actions: [
               TextButton(
                 onPressed: () => Get.back(result: false),
-                child: const Text(
+                child: Text(
                   'لا',
                   style: TextStyle(
-                    color: Colors.white54,
+                    color: ThemeService.getSubtextColor(context),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.yellowAccent,
+                  backgroundColor: ThemeService.getAccentColor(context),
                   foregroundColor: Colors.black,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -45,11 +49,13 @@ class DialogUtils {
                 ),
                 onPressed: () {
                   try {
-                    final adsController = Get.find<AdsManagerController>();
                     Get.find<GameController>().restartGame();
                     Get.back();
 
-                    adsController.showInterstitialAd(onAdDismissed: () {});
+                    if (showAd) {
+                      final adsController = Get.find<AdsManagerController>();
+                      adsController.showInterstitialAd(onAdDismissed: () {});
+                    }
                   } catch (_) {
                     // Fallback
                     try {
@@ -58,9 +64,9 @@ class DialogUtils {
                     Get.back();
                   }
                 },
-                child: const Text(
+                child:  Text(
                   'نعم',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: TextStyle(fontWeight: FontWeight.bold, color: ThemeService.getTextColorInsideButton(context)),
                 ),
               ),
             ],
@@ -70,9 +76,12 @@ class DialogUtils {
   }
 
   static Future<bool> showSkipVotingDialog() async {
+    final context = Get.context;
+    if (context == null) return false;
+
     return await Get.dialog<bool>(
           AlertDialog(
-            backgroundColor: const Color(0xFF1c2528),
+            backgroundColor: Theme.of(context).colorScheme.surface,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
             ),
@@ -84,18 +93,18 @@ class DialogUtils {
               ),
               textAlign: TextAlign.right,
             ),
-            content: const Text(
+            content: Text(
               'في حال تخطّي التصويت، لن تتمكّن من معرفة ما إذا كان الامبوستر قد فاز أم خسر.\n\nهل تريد المتابعة؟',
-              style: TextStyle(color: Colors.white70, fontSize: 15),
+              style: TextStyle(color: ThemeService.getSubtextColor(context), fontSize: 15),
               textAlign: TextAlign.right,
             ),
             actions: [
               TextButton(
                 onPressed: () => Get.back(result: false),
-                child: const Text(
+                child: Text(
                   'إلغاء',
                   style: TextStyle(
-                    color: Colors.white54,
+                    color: ThemeService.getSubtextColor(context),
                     fontWeight: FontWeight.bold,
                   ),
                 ),

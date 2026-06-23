@@ -1,10 +1,10 @@
-import 'dart:async';
 import 'dart:math' as math;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:game_imposter/features/dark_mode/theme_service.dart';
 
 import '../../../../core/controllers/system_controller.dart';
 import '../../../../main.dart';
@@ -49,9 +49,9 @@ class _SplashScreenState extends State<SplashScreen> {
       canPop: false,
       child: Scaffold(
         body: Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [Color(0xFF1c2528), Color.fromARGB(255, 0, 0, 0)],
+              colors: ThemeService.getGradientColors(context),
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
             ),
@@ -81,11 +81,11 @@ class _SplashScreenState extends State<SplashScreen> {
                       opacity: _startAnimation ? 0.0 : 1.0,
                       child: Padding(
                         padding: const EdgeInsets.only(top: 40),
-                        child: const SizedBox(
+                        child: SizedBox(
                           width: 35,
                           height: 35,
                           child: CupertinoActivityIndicator(
-                            color: Colors.white,
+                            color: ThemeService.getTextColor(context),
                           ),
                         ),
                       ),
@@ -119,8 +119,10 @@ class _SplashScreenState extends State<SplashScreen> {
                             child:
                                 Text(
                                       config.updateMessage,
-                                      style: const TextStyle(
-                                        color: Colors.white,
+                                      style: TextStyle(
+                                        color: ThemeService.getTextColor(
+                                          context,
+                                        ),
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -161,7 +163,10 @@ class _SplashScreenState extends State<SplashScreen> {
                                         );
                                       },
                                       style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.yellowAccent,
+                                        backgroundColor:
+                                            ThemeService.getAccentColor(
+                                              context,
+                                            ),
                                         foregroundColor: Colors.black,
                                         padding: const EdgeInsets.symmetric(
                                           horizontal: 50,
@@ -174,9 +179,10 @@ class _SplashScreenState extends State<SplashScreen> {
                                         ),
                                         elevation: 10,
                                       ),
-                                      child: const Text(
+                                      child:  Text(
                                         'ابدأ اللعب',
                                         style: TextStyle(
+                                          color: ThemeService.getTextColorInsideButton(context),
                                           fontSize: 22,
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -276,9 +282,9 @@ class _SplashScreenState extends State<SplashScreen> {
                       child: Text.rich(
                         TextSpan(
                           text: 'بواسطة ',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 14,
-                            color: Colors.white70,
+                            color: ThemeService.getSubtextColor(context),
                           ),
                           children: [
                             TextSpan(

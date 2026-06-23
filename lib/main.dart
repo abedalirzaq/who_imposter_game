@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'core/controllers/system_controller.dart';
 import 'core/services/local_storage_service.dart';
+import 'features/dark_mode/dark_controller.dart';
+import 'features/dark_mode/theme_service.dart';
 import 'features/game/controller/game_controller.dart';
 import 'features/game/model/game_state_model.dart';
 import 'features/game/view/screens/players_setup_screen.dart';
@@ -19,6 +20,7 @@ import 'features/ads_manager/controller/ads_manager_controller.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await LocalStorageService.init();
+  Get.put(DarkController()); // تهيئة متحكم الوضع الليلي
   Get.put(SystemController()); // يجب حقنه أولاً لأن AdsManager يعتمد عليه
   Get.put(AdsManagerController());
   Get.put(GameController());
@@ -30,24 +32,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      title: 'مين الامبوستر ؟ ',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        brightness: Brightness.dark,
-        primaryColor: const Color(0xFF6F2DBD),
-        scaffoldBackgroundColor: const Color(0xFF0F0C29),
-        textTheme: GoogleFonts.cairoTextTheme(
-          Theme.of(context).textTheme,
-        ).apply(bodyColor: Colors.white, displayColor: Colors.white),
-        colorScheme: const ColorScheme.dark(
-          primary: Color(0xFF1c2528),
-          secondary: Color(0xFFA663CC),
-          surface: Color(0xFF302B63),
-        ),
-      ),
-      home: const SplashScreen(),
-    );
+    final themeService = ThemeService();
+
+    return Obx(() {
+      return GetMaterialApp(
+        title: 'مين الامبوستر ؟ ',
+        debugShowCheckedModeBanner: false,
+        theme: themeService.lightTheme,
+        darkTheme: themeService.darkTheme,
+        themeMode: themeService.themeMode,
+        home: const SplashScreen(),
+      );
+    });
   }
 }
 
