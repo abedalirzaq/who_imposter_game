@@ -7,15 +7,12 @@ import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import '../../controller/ads_manager_controller.dart';
 import '../../data/ad_unit_ids.dart';
-import '../../data/banner_ad_cache_service.dart';
 
-/// ويدجيت بسيط لعرض إعلانات البانر مع نظام تحديث ذكي
+/// ويدجيت لعرض إعلانات البانر بشكل فوري ومستمر مع الاحتفاظ بالتحميل المسبق (Preloading)
 ///
 /// المنطق:
-/// 1. عند ظهور الـ Widget، يتحقق إذا مرت المدة المحددة (bannerRefreshMinutes) على آخر تحميل لهذا الـ slotId.
-/// 2. إذا لم تمر المدة → لا يعرض أي إعلان (SizedBox.shrink).
-/// 3. إذا مرت المدة أو أول مرة → يحمّل إعلاناً جديداً ويعرضه.
-//// 
+/// يتم تحميل الإعلان وعرضه فوراً عند دخول أي شاشة بدون فحص مدة زمنية لضمان ظهوره بشكل دائم.
+/// ويستخدم الـ Preload Pool لسرعة الاستجابة. 
 class BannerAdWidget extends StatefulWidget {
   final AdSize adSize;
   final String slotId;
@@ -47,23 +44,17 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
       final config = Get.find<SystemController>().apiConfig;
       if (!config.enableBannerAd) return;
 
-      // هل مرّت المدة المطلوبة منذ آخر تحميل لهذا الموضع؟
-      final canRefresh = await BannerAdCacheService.canRefresh(
-        widget.slotId,
-        config.bannerRefreshMinutes,
-      );
-
       if (!mounted) return;
 
-      if (canRefresh) {
+      setState(() {
         _shouldShow = true;
-        _loadAd();
-      }
-      // إذا لم تمر المدة → لا نعرض شيئاً
+      });
+      _loadAd();
     } catch (_) {
-      // في حالة خطأ → حمّل احتياطياً
       if (mounted) {
-        _shouldShow = true;
+        setState(() {
+          _shouldShow = true;
+        });
         _loadAd();
       }
     }
